@@ -25,4 +25,4 @@ Tạo repository GitHub, đẩy mã nguồn lên nhánh `main`, rồi vào **Set
 
 ## Cách tính Top 3
 
-Có 56 bộ ba không xét thứ tự. Xác suất lý thuyết của mỗi bộ là số hoán vị của bộ đó chia cho 216. Với `c` lần xuất hiện trong `n` lần khớp, trang hiển thị ước tính `(c + 56 × p_lý_thuyết) / (n + 56)`. Mức làm mượt 56 được cố định để tránh tỷ lệ cực đoan khi có rất ít dữ liệu. Đây là ước tính mô tả, không phải bảo đảm cho kỳ tiếp theo.
+Top 3 được tính độc lập với bộ lọc Top 10. Bộ xử lý đếm tần suất từng mặt 1–6 trên **toàn bộ** các kỳ. Với tổng `3N` mặt từ `N` kỳ, xác suất của mặt `i` được ước tính bằng `(số lần mặt i xuất hiện + 1) / (3N + 6)`. Xác suất của bộ ba không xét thứ tự bằng số hoán vị của bộ đó nhân với tích xác suất của ba mặt. Tổng xác suất của 56 bộ bằng 100%. Mô hình giả định ba xúc xắc độc lập và tần suất các mặt ổn định; chênh lệch nhỏ có thể chỉ là dao động ngẫu nhiên và không bảo đảm kỳ tiếp theo. Vì không dùng kết quả đã nhập, Top 3 giữ nguyên khi thay bộ lọc.

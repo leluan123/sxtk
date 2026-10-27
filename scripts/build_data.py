@@ -115,6 +115,7 @@ def main() -> None:
             by_id[row["id"]] = row
 
     rows = [by_id[key] for key in sorted(by_id)]
+    face_counts = Counter(face for row in rows for face in row["result"])
     draw_minutes = infer_minutes(rows)
     counts: dict[int, dict[str, Counter[str]]] = {
         1: defaultdict(Counter),
@@ -152,6 +153,7 @@ def main() -> None:
         "records": len(rows),
         "latest_id": str(rows[-1]["id"]),
         "latest_date": rows[-1]["date"],
+        "face_counts": {str(face): face_counts[face] for face in range(1, 7)},
         "transitions": totals,
         "minute_coverage": {"mapped_records": len(draw_minutes), "unmapped_records": len(rows) - len(draw_minutes)},
         "minute_stats": {str(k): contexts for k, contexts in minute_stats.items()},

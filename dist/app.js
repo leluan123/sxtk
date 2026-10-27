@@ -15,7 +15,7 @@ const periodButtons = [...document.querySelectorAll('.period-choice')];
 let data = null;
 let periodCount = 1;
 const periods = [[null, null, null], [null, null, null]];
-const PRIOR_STRENGTH = 56;
+const FACE_PRIOR = 1;
 
 const allCombinations = [];
 for (let a = 1; a <= 6; a++) {
@@ -149,11 +149,12 @@ function analyze() {
     historyBody.append(row);
   });
 
-  const estimated = allCombinations.map(faces => {
-    const key = faces.join(',');
-    const count = counts[key] || 0;
-    return { faces, count, probability: (count + PRIOR_STRENGTH * theoryProbability(faces)) / (sampleSize + PRIOR_STRENGTH) };
-  }).sort((a, b) => b.probability - a.probability || b.count - a.count || combinationKey(a.faces).localeCompare(combinationKey(b.faces), 'en', { numeric: true })).slice(0, 3);
+  const faceSampleSize = data.records * 3;
+  const faceProbability = face => (data.face_counts[String(face)] + FACE_PRIOR) / (faceSampleSize + 6 * FACE_PRIOR);
+  const estimated = allCombinations.map(faces => ({
+    faces,
+    probability: 216 * theoryProbability(faces) * faces.reduce((product, face) => product * faceProbability(face), 1),
+  })).sort((a, b) => b.probability - a.probability || combinationKey(a.faces).localeCompare(combinationKey(b.faces), 'en', { numeric: true })).slice(0, 3);
 
   probabilityList.replaceChildren();
   estimated.forEach((item, index) => {
@@ -167,7 +168,7 @@ function analyze() {
     value.textContent = `${(item.probability * 100).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`;
     heading.append(name, value);
     const detail = document.createElement('p');
-    detail.textContent = `Tổng ${item.faces.reduce((a, b) => a + b, 0)}  ·  Lịch sử: ${item.count} lần`;
+    detail.textContent = `Tổng ${item.faces.reduce((a, b) => a + b, 0)}  ·  Lý thuyết: ${(theoryProbability(item.faces) * 100).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`;
     const bar = document.createElement('div');
     bar.className = 'prob-bar';
     const fill = document.createElement('span');
