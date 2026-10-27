@@ -1,6 +1,6 @@
 # Phân tích kết quả xúc xắc
 
-Web tĩnh dành cho PC và điện thoại. Trang hiển thị Top 10 kết quả lịch sử sau 1 hoặc 2 kỳ nhập vào, Top 3 xác suất ước tính từ dữ liệu, và các bộ Hoa (ba số trùng nhau) từng xuất hiện ở kỳ tiếp theo trong cùng lịch sử đã lọc.
+Web tĩnh dành cho PC và điện thoại. Sau khi lọc theo 1 hoặc 2 kỳ nhập vào, trang hiển thị lần lượt: các bộ Hoa (ba số trùng nhau) từng xuất hiện ở kỳ tiếp theo, Top 10 kết quả lịch sử, và Top 3 xác suất ước tính từ dữ liệu.
 
 ## Dữ liệu
 
