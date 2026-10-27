@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101c2a" />
+    <meta name="description" content="Tra cứu kết quả lịch sử và ước tính xác suất cho bộ ba xúc xắc." />
+    <title>Phân tích kết quả xúc xắc</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">● ●<br /> ● </span><span>THỐNG KÊ XÚC XẮC</span></div>
+        <span class="header-tag">Dữ liệu lịch sử · Cập nhật mỗi ngày</span>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <div class="intro-copy">
+            <p class="eyebrow">CÔNG CỤ PHÂN TÍCH</p>
+            <h1 id="page-title">Từ dữ liệu cũ,<br /><em>nhìn rõ con số.</em></h1>
+            <p class="lead">Chọn một hoặc hai kỳ kết quả để xem lịch sử kỳ tiếp theo, ước tính xác suất và kiểm tra kết quả Hoa.</p>
+          </div>
+          <div class="intro-visual" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="dice dice-one">⚄</div><div class="dice dice-two">⚂</div><div class="dice dice-three">⚅</div>
+          </div>
+        </section>
+
+        <section class="workspace" aria-labelledby="filter-title">
+          <div class="section-topline"><span class="section-index">BỘ LỌC</span><span id="data-status" class="data-status" role="status">Đang tải dữ liệu…</span></div>
+          <h2 id="filter-title">Nhập kết quả đã biết</h2>
+          <p class="section-description">Thứ tự ba số trong mỗi kỳ không ảnh hưởng đến kết quả. Khi chọn hai kỳ, thứ tự giữa các kỳ vẫn theo thời gian.</p>
+
+          <div class="period-toolbar" aria-label="Số kỳ muốn nhập">
+            <button type="button" class="period-choice active" data-periods="1" aria-pressed="true">1 kỳ</button>
+            <button type="button" class="period-choice" data-periods="2" aria-pressed="false">2 kỳ</button>
+          </div>
+          <div id="period-inputs" class="period-inputs"></div>
+          <div class="filter-actions">
+            <button id="analyze" class="primary-button" type="button">Phân tích kết quả <span aria-hidden="true">↗</span></button>
+            <p class="helper-text">Chọn đủ 3 số từ 1 đến 6 cho mỗi kỳ.</p>
+          </div>
+        </section>
+
+        <div id="results" class="results" aria-live="polite">
+          <div id="empty-state" class="empty-state"><span class="empty-icon" aria-hidden="true">✦</span><h2>Sẵn sàng phân tích</h2><p>Nhập kết quả phía trên để bắt đầu xem dữ liệu.</p></div>
+          <div id="results-content" hidden>
+            <div class="results-heading"><div><p class="eyebrow">KẾT QUẢ PHÂN TÍCH</p><h2 id="results-title">Kỳ tiếp theo</h2></div><div id="sample-pill" class="sample-pill"></div></div>
+            <div class="results-grid">
+              <section class="card history-card" aria-labelledby="history-title">
+                <div class="card-heading"><span class="section-index">01 / LỊCH SỬ</span><h3 id="history-title">Top 10 xuất hiện nhiều nhất</h3><p>Đếm kết quả của kỳ ngay sau những lần khớp bộ lọc.</p></div>
+                <div class="table-wrap"><table><thead><tr><th scope="col">Hạng</th><th scope="col">Bộ số</th><th scope="col">Tổng</th><th scope="col">Số lần</th></tr></thead><tbody id="history-body"></tbody></table></div>
+              </section>
+              <section class="card probability-card" aria-labelledby="probability-title">
+                <div class="card-heading"><span class="section-index">02 / ƯỚC TÍNH THỐNG KÊ</span><h3 id="probability-title">Top 3 xác suất cao nhất</h3><p>Ước tính có điều chỉnh theo xác suất lý thuyết và số mẫu quan sát.</p></div>
+                <ol id="probability-list" class="probability-list"></ol>
+                <details class="method-note"><summary>Cách tính xác suất</summary><p>Mỗi bộ số có xác suất lý thuyết tùy số cách sắp xếp: ba số khác nhau là 6/216, hai số giống nhau là 3/216, ba số giống nhau là 1/216. Ước tính hiển thị = (số lần xuất hiện + 56 × xác suất lý thuyết) / (số mẫu + 56). Số 56 là mức làm mượt tương ứng với 56 bộ số có thể có. Đây là ước tính từ dữ liệu, không đảm bảo kết quả kỳ tới.</p></details>
+              </section>
+            </div>
+            <section class="card hoa-card" aria-labelledby="hoa-title">
+              <div class="card-heading"><span class="section-index">03 / HOA</span><h3 id="hoa-title">Có xuất hiện ba số trùng nhau?</h3><p>Kiểm tra các kết quả của kỳ tiếp theo trong cùng lịch sử đã lọc.</p></div>
+              <div class="hoa-content"><p id="hoa-status" class="hoa-status"></p><div id="hoa-list" class="hoa-list"></div></div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <footer><span>THỐNG KÊ XÚC XẮC</span><span>Chỉ phục vụ tham khảo và phân tích dữ liệu.</span></footer>
+    </div>
+  </body>
+</html>
