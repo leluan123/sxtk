@@ -1,10 +1,12 @@
 # Phân tích kết quả xúc xắc
 
-Web tĩnh dành cho PC và điện thoại. Sau khi lọc theo 1 hoặc 2 kỳ nhập vào, trang hiển thị lần lượt: các bộ Hoa (ba số trùng nhau) từng xuất hiện ở kỳ tiếp theo, Top 10 kết quả lịch sử, và Top 3 xác suất ước tính từ dữ liệu.
+Web tĩnh dành cho PC và điện thoại. Sau khi lọc theo 1 hoặc 2 kỳ nhập vào, trang hiển thị lần lượt: Hoa ở các kỳ có phút quay 29, 35, 41, 47 hoặc 53; các bộ Hoa từng xuất hiện ở kỳ tiếp theo; Top 10 kết quả lịch sử; và Top 3 xác suất ước tính từ dữ liệu.
 
 ## Dữ liệu
 
 Đặt các file `.json` hoặc `.jsonl` trong `datas/`. Mỗi file có thể là mảng JSON hoặc JSON Lines (mỗi dòng là một đối tượng). Mỗi bản ghi cần có `id`, `date`, `result` gồm ba số từ 1 đến 6, và `total`. Các file được gộp và loại bản ghi trùng `id`; nếu cùng `id` mà nội dung khác nhau, quá trình build dừng để tránh đếm sai. Thứ tự ba số trong một kỳ không quan trọng. Hai kỳ nhập vào vẫn được xét theo thứ tự thời gian. Chỉ các `id` liền nhau mới được tính là các kỳ liên tiếp.
+
+File dữ liệu hiện không có giờ quay. Mục Hoa theo phút suy ra phút của kỳ từ lịch Bingo18: 159 kỳ/ngày, kỳ đầu 06:05, cách nhau 6 phút, kỳ cuối 21:53. Mốc được xác nhận là kỳ `0193354` lúc 06:05 ngày 28/10/2026. Bộ xử lý dùng mốc này và những ngày có đủ 159 mã kỳ liên tục để suy ra các ngày thiếu bản ghi. Ngày nào không xác định chắc chắn mốc đầu ngày sẽ bị bỏ qua trong riêng mục theo phút, và trang sẽ ghi số kỳ bị bỏ qua. `process_time` là thời điểm xử lý dữ liệu, không được dùng làm giờ quay. [Lịch quay Bingo18 của Vietlott](https://vietlott.vn/vi/choi/bingo/cach-choi).
 
 Khi có dữ liệu mới, thêm file vào `datas/` và đẩy commit lên nhánh `main`. GitHub Actions sẽ tạo lại `dist/data.json` và triển khai trang.
 

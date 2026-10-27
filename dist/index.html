@@ -37,6 +37,11 @@
           <div id="empty-state" class="empty-state"><span class="empty-icon" aria-hidden="true">✦</span><h2>Sẵn sàng phân tích</h2><p>Nhập kết quả phía trên để bắt đầu xem dữ liệu.</p></div>
           <div id="results-content" hidden>
             <div class="results-heading"><div><p class="eyebrow">KẾT QUẢ PHÂN TÍCH</p><h2 id="results-title">Kỳ tiếp theo</h2></div><div id="sample-pill" class="sample-pill"></div></div>
+            <section class="card minute-card" aria-labelledby="minute-title">
+              <div class="card-heading"><span class="section-index">04 / HOA THEO PHÚT</span><h3 id="minute-title">Hoa ở các kỳ phút 29, 35, 41, 47, 53</h3><p>Trong những lần khớp bộ số đã nhập, thống kê Hoa của kỳ tiếp theo theo phút quay.</p></div>
+              <div class="table-wrap"><table><thead><tr><th scope="col">Phút</th><th scope="col">Kỳ khớp</th><th scope="col">Số lần Hoa</th><th scope="col">Bộ số Hoa</th></tr></thead><tbody id="minute-hoa-body"></tbody></table></div>
+              <p id="minute-coverage" class="minute-note"></p>
+            </section>
             <section class="card hoa-card" aria-labelledby="hoa-title">
               <div class="card-heading"><span class="section-index">01 / HOA</span><h3 id="hoa-title">Có xuất hiện ba số trùng nhau?</h3><p>Kiểm tra các kết quả của kỳ tiếp theo trong cùng lịch sử đã lọc.</p></div>
               <div class="hoa-content"><p id="hoa-status" class="hoa-status"></p><div id="hoa-list" class="hoa-list"></div></div>

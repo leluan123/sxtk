@@ -6,6 +6,8 @@ const historyBody = document.getElementById('history-body');
 const probabilityList = document.getElementById('probability-list');
 const samplePill = document.getElementById('sample-pill');
 const resultsTitle = document.getElementById('results-title');
+const minuteHoaBody = document.getElementById('minute-hoa-body');
+const minuteCoverage = document.getElementById('minute-coverage');
 const hoaStatus = document.getElementById('hoa-status');
 const hoaList = document.getElementById('hoa-list');
 const periodButtons = [...document.querySelectorAll('.period-choice')];
@@ -196,6 +198,39 @@ function analyze() {
   } else {
     hoaStatus.textContent = `Không có Hoa trong ${sampleSize.toLocaleString('vi-VN')} kết quả tiếp theo đã lọc.`;
   }
+
+  const minutes = [29, 35, 41, 47, 53];
+  const minuteData = data.minute_stats?.[String(periodCount)]?.[context] || {};
+  minuteHoaBody.replaceChildren();
+  minutes.forEach(minute => {
+    const bucket = minuteData[String(minute)] || { sample: 0, hoa: {} };
+    const hoaEntries = Object.entries(bucket.hoa).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'en', { numeric: true }));
+    const row = document.createElement('tr');
+    const minuteCell = document.createElement('td');
+    minuteCell.className = 'minute-value';
+    minuteCell.textContent = `:${minute}`;
+    const sampleCell = document.createElement('td');
+    sampleCell.textContent = bucket.sample.toLocaleString('vi-VN');
+    const countCell = document.createElement('td');
+    countCell.className = 'count';
+    countCell.textContent = hoaEntries.reduce((sum, [, count]) => sum + count, 0).toLocaleString('vi-VN');
+    const setsCell = document.createElement('td');
+    setsCell.className = 'minute-sets';
+    if (hoaEntries.length) {
+      hoaEntries.forEach(([key, count]) => {
+        const badge = document.createElement('span');
+        badge.className = 'minute-set';
+        badge.textContent = `${key.split(',').join(' · ')} (${count})`;
+        setsCell.append(badge);
+      });
+    } else {
+      setsCell.textContent = 'Không có';
+    }
+    row.append(minuteCell, sampleCell, countCell, setsCell);
+    minuteHoaBody.append(row);
+  });
+  const unmapped = data.minute_coverage?.unmapped_records || 0;
+  minuteCoverage.textContent = `Phút được suy ra theo lịch Bingo18: kỳ đầu 06:05, mỗi kỳ cách 6 phút.${unmapped ? ` Bỏ qua ${unmapped.toLocaleString('vi-VN')} kỳ chưa xác định chắc chắn phút.` : ''}`;
 
   samplePill.textContent = `${sampleSize.toLocaleString('vi-VN')} lần khớp`;
   resultsTitle.textContent = `Sau ${periodCount} kỳ đã nhập`;
