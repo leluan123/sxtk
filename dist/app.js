@@ -9,6 +9,8 @@ const samplePill = document.getElementById('sample-pill');
 const resultsTitle = document.getElementById('results-title');
 const minuteHoaBody = document.getElementById('minute-hoa-body');
 const minuteCoverage = document.getElementById('minute-coverage');
+const pairSummary = document.getElementById('pair-summary');
+const pairBody = document.getElementById('pair-body');
 const hoaStatus = document.getElementById('hoa-status');
 const hoaList = document.getElementById('hoa-list');
 const periodButtons = [...document.querySelectorAll('.period-choice')];
@@ -249,6 +251,30 @@ function analyze() {
   });
   const unmapped = data.minute_coverage?.unmapped_records || 0;
   minuteCoverage.textContent = `Phút được suy ra theo lịch Bingo18: kỳ đầu 06:05, mỗi kỳ cách 6 phút.${unmapped ? ` Bỏ qua ${unmapped.toLocaleString('vi-VN')} kỳ chưa xác định chắc chắn phút.` : ''}`;
+
+  const pairCounts = new Map(Array.from({ length: 6 }, (_, index) => [index + 1, 0]));
+  for (const [key, count] of Object.entries(counts)) {
+    const faces = key.split(',').map(Number);
+    if (new Set(faces).size !== 2) continue;
+    const repeated = faces.find(face => faces.filter(value => value === face).length === 2);
+    pairCounts.set(repeated, pairCounts.get(repeated) + count);
+  }
+  const pairTotal = [...pairCounts.values()].reduce((sum, count) => sum + count, 0);
+  pairSummary.textContent = `${pairTotal.toLocaleString('vi-VN')} kỳ có đúng hai số giống nhau trong ${sampleSize.toLocaleString('vi-VN')} kết quả tiếp theo (${(pairTotal / sampleSize * 100).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%).`;
+  pairBody.replaceChildren();
+  pairCounts.forEach((count, face) => {
+    const row = document.createElement('tr');
+    const faceCell = document.createElement('td');
+    faceCell.className = 'pair-value';
+    faceCell.textContent = `${face} · ${face}`;
+    const countCell = document.createElement('td');
+    countCell.className = 'count';
+    countCell.textContent = count.toLocaleString('vi-VN');
+    const shareCell = document.createElement('td');
+    shareCell.textContent = `${(count / sampleSize * 100).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`;
+    row.append(faceCell, countCell, shareCell);
+    pairBody.append(row);
+  });
 
   samplePill.textContent = `${sampleSize.toLocaleString('vi-VN')} lần khớp`;
   resultsTitle.textContent = `Sau ${periodCount} kỳ đã nhập`;

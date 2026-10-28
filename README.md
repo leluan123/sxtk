@@ -1,6 +1,6 @@
 # Phân tích kết quả xúc xắc
 
-Web tĩnh dành cho PC và điện thoại. Sau khi lọc theo 1 hoặc 2 kỳ nhập vào, trang hiển thị lần lượt: số kỳ có tổng 6, 15, 17, 4, 5 hoặc 16; các bộ Hoa từng xuất hiện ở kỳ tiếp theo; Top 10 kết quả lịch sử; Top 3 xác suất ước tính toàn cục; và Hoa ở các kỳ có phút quay 29, 35, 41, 47 hoặc 53.
+Web tĩnh dành cho PC và điện thoại. Sau khi lọc theo 1 hoặc 2 kỳ nhập vào, trang hiển thị lần lượt: số kỳ có tổng 6, 15, 17, 4, 5 hoặc 16; các bộ Hoa từng xuất hiện ở kỳ tiếp theo; Top 10 kết quả lịch sử; Top 3 xác suất ước tính toàn cục; Hoa ở các kỳ có phút quay 29, 35, 41, 47 hoặc 53; và số kỳ có đúng một cặp số giống nhau. Mục cặp số loại trừ Hoa và thống kê theo mặt lặp 1–6.
 
 ## Dữ liệu
 
