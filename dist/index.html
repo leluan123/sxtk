@@ -20,7 +20,7 @@
         <section class="workspace" aria-labelledby="filter-title">
           <div class="section-topline"><span class="section-index">BỘ LỌC</span><span id="data-status" class="data-status" role="status">Đang tải dữ liệu…</span></div>
           <h2 id="filter-title">Nhập kết quả đã biết</h2>
-          <p class="section-description">Thứ tự ba số trong mỗi kỳ không ảnh hưởng đến kết quả. Khi chọn hai kỳ, thứ tự giữa các kỳ vẫn theo thời gian.</p>
+          <p class="section-description">Thứ tự ba số trong mỗi kỳ được giữ nguyên: 4-1-1 khác 1-4-1. Khi chọn hai kỳ, thứ tự giữa các kỳ cũng theo thời gian.</p>
 
           <div class="period-toolbar" aria-label="Số kỳ muốn nhập">
             <button type="button" class="period-choice active" data-periods="1" aria-pressed="true">1 kỳ</button>
@@ -37,10 +37,9 @@
           <div id="empty-state" class="empty-state"><span class="empty-icon" aria-hidden="true">✦</span><h2>Sẵn sàng phân tích</h2><p>Nhập kết quả phía trên để bắt đầu xem dữ liệu.</p></div>
           <div id="results-content" hidden>
             <div class="results-heading"><div><p class="eyebrow">KẾT QUẢ PHÂN TÍCH</p><h2 id="results-title">Kỳ tiếp theo</h2></div><div id="sample-pill" class="sample-pill"></div></div>
-            <section class="card minute-card" aria-labelledby="minute-title">
-              <div class="card-heading"><span class="section-index">04 / HOA THEO PHÚT</span><h3 id="minute-title">Hoa ở các kỳ phút 29, 35, 41, 47, 53</h3><p>Trong những lần khớp bộ số đã nhập, thống kê Hoa của kỳ tiếp theo theo phút quay.</p></div>
-              <div class="table-wrap"><table><thead><tr><th scope="col">Phút</th><th scope="col">Kỳ khớp</th><th scope="col">Số lần Hoa</th><th scope="col">Bộ số Hoa</th></tr></thead><tbody id="minute-hoa-body"></tbody></table></div>
-              <p id="minute-coverage" class="minute-note"></p>
+            <section class="card total-card" aria-labelledby="total-title">
+              <div class="card-heading"><span class="section-index">05 / TỔNG KẾT QUẢ</span><h3 id="total-title">Các tổng ở kỳ tiếp theo</h3><p>Đếm số kỳ có tổng 6, 15, 17, 4, 5 hoặc 16 sau kết quả đã nhập.</p></div>
+              <div class="table-wrap"><table><thead><tr><th scope="col">Tổng</th><th scope="col">Số kỳ</th><th scope="col">Tỷ lệ trong mẫu lọc</th></tr></thead><tbody id="total-body"></tbody></table></div>
             </section>
             <section class="card hoa-card" aria-labelledby="hoa-title">
               <div class="card-heading"><span class="section-index">01 / HOA</span><h3 id="hoa-title">Có xuất hiện ba số trùng nhau?</h3><p>Kiểm tra các kết quả của kỳ tiếp theo trong cùng lịch sử đã lọc.</p></div>
@@ -52,11 +51,16 @@
                 <div class="table-wrap"><table><thead><tr><th scope="col">Hạng</th><th scope="col">Bộ số</th><th scope="col">Tổng</th><th scope="col">Số lần</th></tr></thead><tbody id="history-body"></tbody></table></div>
               </section>
               <section class="card probability-card" aria-labelledby="probability-title">
-                <div class="card-heading"><span class="section-index">03 / ƯỚC TÍNH THỐNG KÊ</span><h3 id="probability-title">Top 3 xác suất toàn cục</h3><p>Tính từ tần suất các mặt 1–6 trên toàn bộ dữ liệu; không dùng bộ lọc của Top 10.</p></div>
+                <div class="card-heading"><span class="section-index">03 / ƯỚC TÍNH THỐNG KÊ</span><h3 id="probability-title">Top 3 xác suất toàn cục</h3><p>Tính riêng từng vị trí số trên toàn bộ dữ liệu; không dùng bộ lọc của Top 10.</p></div>
                 <ol id="probability-list" class="probability-list"></ol>
-                <details class="method-note"><summary>Cách tính xác suất</summary><p>Đếm số lần mỗi mặt 1–6 xuất hiện trong toàn bộ các kỳ. Xác suất ước tính của một mặt = (số lần xuất hiện + 1) / (tổng số mặt đã quay + 6). Xác suất của bộ ba không xét thứ tự = số cách sắp xếp bộ đó × tích xác suất của ba mặt. Mô hình giả định ba xúc xắc độc lập và tần suất mặt ổn định. Kết quả không phụ thuộc bộ số người dùng nhập; chênh lệch nhỏ giữa các bộ có thể chỉ là dao động ngẫu nhiên và không bảo đảm kỳ tới.</p></details>
+                <details class="method-note"><summary>Cách tính xác suất</summary><p>Đếm tần suất mặt 1–6 riêng cho vị trí thứ nhất, thứ hai và thứ ba trên toàn bộ các kỳ. Ở mỗi vị trí, xác suất ước tính của một mặt = (số lần xuất hiện + 1) / (số kỳ + 6). Xác suất bộ a-b-c = xác suất a ở vị trí 1 × xác suất b ở vị trí 2 × xác suất c ở vị trí 3. Có 216 bộ có thứ tự, mỗi bộ có xác suất lý thuyết 1/216 nếu xúc xắc công bằng. Mô hình giả định các vị trí độc lập và tần suất ổn định; chênh lệch nhỏ có thể chỉ là dao động ngẫu nhiên, không bảo đảm kỳ tới.</p></details>
               </section>
             </div>
+            <section class="card minute-card" aria-labelledby="minute-title">
+              <div class="card-heading"><span class="section-index">04 / HOA THEO PHÚT</span><h3 id="minute-title">Hoa ở các kỳ phút 29, 35, 41, 47, 53</h3><p>Trong những lần khớp bộ số đã nhập, thống kê Hoa của kỳ tiếp theo theo phút quay.</p></div>
+              <div class="table-wrap"><table><thead><tr><th scope="col">Phút</th><th scope="col">Kỳ khớp</th><th scope="col">Số lần Hoa</th><th scope="col">Bộ số Hoa</th></tr></thead><tbody id="minute-hoa-body"></tbody></table></div>
+              <p id="minute-coverage" class="minute-note"></p>
+            </section>
           </div>
         </div>
       </main>

@@ -8,5 +8,6 @@
 @media(max-width:600px){.hoa-content{padding:21px 20px 24px}.hoa-status{font-size:14px}.hoa-list{display:grid;grid-template-columns:1fr}.hoa-item{min-width:0}}
 .workspace{margin-top:32px}
 @media(max-width:600px){.workspace{margin-top:20px}}
-.minute-card{margin-bottom:20px;min-height:0}.minute-card th:last-child,.minute-card td:last-child{width:55%}.minute-value{color:var(--gold);font-weight:800}.minute-sets{white-space:normal;min-width:210px}.minute-set{display:inline-block;background:#213c4a;border:1px solid #486273;border-radius:7px;padding:5px 8px;margin:3px 5px 3px 0;color:var(--cyan);white-space:nowrap;font-weight:700}.minute-note{color:var(--muted);font-size:11px;line-height:1.6;margin:0;padding:16px 28px;border-top:1px solid var(--border)}
+.minute-card{margin-top:20px;min-height:0}.minute-card th:last-child,.minute-card td:last-child{width:55%}.minute-value{color:var(--gold);font-weight:800}.minute-sets{white-space:normal;min-width:210px}.minute-set{display:inline-block;background:#213c4a;border:1px solid #486273;border-radius:7px;padding:5px 8px;margin:3px 5px 3px 0;color:var(--cyan);white-space:nowrap;font-weight:700}.minute-note{color:var(--muted);font-size:11px;line-height:1.6;margin:0;padding:16px 28px;border-top:1px solid var(--border)}
 @media(max-width:600px){.minute-note{padding:15px 20px}.minute-card th:last-child,.minute-card td:last-child{width:auto}}
+.total-card{min-height:0;margin-bottom:20px}.total-value{color:var(--gold);font-weight:800}

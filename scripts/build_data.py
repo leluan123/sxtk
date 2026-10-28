@@ -40,7 +40,7 @@ def normalize(record: dict, path: Path) -> dict:
             raise ValueError("total does not equal the sum of result")
         draw_date = record["date"]
         date.fromisoformat(draw_date)
-        return {"id": identifier, "date": draw_date, "result": tuple(sorted(faces))}
+        return {"id": identifier, "date": draw_date, "result": tuple(faces)}
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError(f"Invalid record in {path}: {error}") from error
 
@@ -115,7 +115,7 @@ def main() -> None:
             by_id[row["id"]] = row
 
     rows = [by_id[key] for key in sorted(by_id)]
-    face_counts = Counter(face for row in rows for face in row["result"])
+    position_counts = [Counter(row["result"][position] for row in rows) for position in range(3)]
     draw_minutes = infer_minutes(rows)
     counts: dict[int, dict[str, Counter[str]]] = {
         1: defaultdict(Counter),
@@ -130,7 +130,7 @@ def main() -> None:
             return
         bucket = minute_stats[periods].setdefault(context, {}).setdefault(str(minute), {"sample": 0, "hoa": Counter()})
         bucket["sample"] += 1
-        if current["result"][0] == current["result"][2]:
+        if current["result"][0] == current["result"][1] == current["result"][2]:
             bucket["hoa"][outcome] += 1
 
     for i in range(1, len(rows)):
@@ -153,7 +153,10 @@ def main() -> None:
         "records": len(rows),
         "latest_id": str(rows[-1]["id"]),
         "latest_date": rows[-1]["date"],
-        "face_counts": {str(face): face_counts[face] for face in range(1, 7)},
+        "position_counts": [
+            {str(face): counts_at_position[face] for face in range(1, 7)}
+            for counts_at_position in position_counts
+        ],
         "transitions": totals,
         "minute_coverage": {"mapped_records": len(draw_minutes), "unmapped_records": len(rows) - len(draw_minutes)},
         "minute_stats": {str(k): contexts for k, contexts in minute_stats.items()},

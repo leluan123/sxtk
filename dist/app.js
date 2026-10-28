@@ -3,6 +3,7 @@ const dataStatus = document.getElementById('data-status');
 const emptyState = document.getElementById('empty-state');
 const resultsContent = document.getElementById('results-content');
 const historyBody = document.getElementById('history-body');
+const totalBody = document.getElementById('total-body');
 const probabilityList = document.getElementById('probability-list');
 const samplePill = document.getElementById('sample-pill');
 const resultsTitle = document.getElementById('results-title');
@@ -16,24 +17,19 @@ let data = null;
 let periodCount = 1;
 const periods = [[null, null, null], [null, null, null]];
 const FACE_PRIOR = 1;
+const TARGET_TOTALS = [6, 15, 17, 4, 5, 16];
 
 const allCombinations = [];
 for (let a = 1; a <= 6; a++) {
-  for (let b = a; b <= 6; b++) {
-    for (let c = b; c <= 6; c++) {
+  for (let b = 1; b <= 6; b++) {
+    for (let c = 1; c <= 6; c++) {
       allCombinations.push([a, b, c]);
     }
   }
 }
 
 function combinationKey(faces) {
-  return [...faces].sort((a, b) => a - b).join(',');
-}
-
-function theoryProbability(faces) {
-  if (faces[0] === faces[2]) return 1 / 216;
-  if (faces[0] === faces[1] || faces[1] === faces[2]) return 3 / 216;
-  return 6 / 216;
+  return faces.join(',');
 }
 
 function renderInputs() {
@@ -135,6 +131,27 @@ function analyze() {
     return;
   }
 
+  const totalCounts = new Map(TARGET_TOTALS.map(total => [total, 0]));
+  for (const [key, count] of Object.entries(counts)) {
+    const total = key.split(',').reduce((sum, face) => sum + Number(face), 0);
+    if (totalCounts.has(total)) totalCounts.set(total, totalCounts.get(total) + count);
+  }
+  totalBody.replaceChildren();
+  TARGET_TOTALS.forEach(total => {
+    const count = totalCounts.get(total);
+    const row = document.createElement('tr');
+    const totalCell = document.createElement('td');
+    totalCell.className = 'total-value';
+    totalCell.textContent = String(total);
+    const countCell = document.createElement('td');
+    countCell.className = 'count';
+    countCell.textContent = count.toLocaleString('vi-VN');
+    const shareCell = document.createElement('td');
+    shareCell.textContent = `${(count / sampleSize * 100).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`;
+    row.append(totalCell, countCell, shareCell);
+    totalBody.append(row);
+  });
+
   const historical = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'en', { numeric: true })).slice(0, 10);
   historyBody.replaceChildren();
   historical.forEach(([key, count], index) => {
@@ -149,11 +166,11 @@ function analyze() {
     historyBody.append(row);
   });
 
-  const faceSampleSize = data.records * 3;
-  const faceProbability = face => (data.face_counts[String(face)] + FACE_PRIOR) / (faceSampleSize + 6 * FACE_PRIOR);
+  const positionProbability = (position, face) =>
+    (data.position_counts[position][String(face)] + FACE_PRIOR) / (data.records + 6 * FACE_PRIOR);
   const estimated = allCombinations.map(faces => ({
     faces,
-    probability: 216 * theoryProbability(faces) * faces.reduce((product, face) => product * faceProbability(face), 1),
+    probability: faces.reduce((product, face, position) => product * positionProbability(position, face), 1),
   })).sort((a, b) => b.probability - a.probability || combinationKey(a.faces).localeCompare(combinationKey(b.faces), 'en', { numeric: true })).slice(0, 3);
 
   probabilityList.replaceChildren();
@@ -168,7 +185,7 @@ function analyze() {
     value.textContent = `${(item.probability * 100).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`;
     heading.append(name, value);
     const detail = document.createElement('p');
-    detail.textContent = `Tổng ${item.faces.reduce((a, b) => a + b, 0)}  ·  Lý thuyết: ${(theoryProbability(item.faces) * 100).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`;
+    detail.textContent = `Tổng ${item.faces.reduce((a, b) => a + b, 0)}  ·  Lý thuyết: ${(100 / 216).toLocaleString('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`;
     const bar = document.createElement('div');
     bar.className = 'prob-bar';
     const fill = document.createElement('span');
